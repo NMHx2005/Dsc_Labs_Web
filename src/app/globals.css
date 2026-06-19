@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Dark robotics theme — sourced from Figma "DES Alex" foundation tokens. */
+  :root {
+    --background: 222 16% 13%; /* #1B1E25 */
+    --foreground: 0 0% 100%;
+    --card: 222 16% 16%;
+    --card-foreground: 0 0% 100%;
+    --popover: 222 16% 16%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 217 75% 32%; /* #143F8D brand blue */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 219 49% 19%; /* #15294B */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 218 35% 30%; /* #354764 */
+    --muted-foreground: 217 11% 60%; /* #8993A4 */
+    --accent: 217 75% 32%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 219 49% 19%;
+    --input: 219 49% 19%;
+    --ring: 217 75% 50%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  /* Display headings use SF Pro's expanded width axis (Figma: "wdth" 132). */
+  .font-expanded {
+    font-variation-settings: "wdth" 132;
+  }
+
+  /* Hero/About left-to-right scrim used to keep title text legible over imagery. */
+  .scrim-x {
+    background: linear-gradient(
+      90deg,
+      rgba(27, 30, 37, 0.92) 0%,
+      rgba(27, 30, 37, 0.8) 44%,
+      rgba(27, 30, 37, 0) 100%
+    );
+  }
+
+  .scrim-y {
+    background: linear-gradient(
+      180deg,
+      rgba(27, 30, 37, 0) 0%,
+      rgba(27, 30, 37, 0.85) 70%,
+      rgba(27, 30, 37, 0.96) 100%
+    );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
