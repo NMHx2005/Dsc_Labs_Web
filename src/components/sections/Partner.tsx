@@ -45,17 +45,17 @@ export function Partner() {
       <div className="container relative flex min-h-[520px] items-center lg:min-h-[800px]">
         <div className="flex w-full flex-col gap-12 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
           <Reveal className="flex max-w-[531px] flex-col gap-5">
-            <p className="text-xl uppercase tracking-[0.04em] text-dsc-b100 sm:text-2xl">
+            <p className="text-2xl uppercase text-dsc-b100">
               Global Ecosystem
             </p>
-            <h2 className="font-expanded text-[clamp(2.25rem,4.5vw,4rem)] font-light uppercase leading-[1.05] text-white">
+            <h2 className="font-expanded text-[clamp(2rem,4.5vw,4rem)] font-light uppercase leading-[1.05] text-white">
               <span className="whitespace-nowrap">
                 Partner{" "}
-                <span className="text-[0.625em] font-semibold">With</span>
+                <span className="font-semibold md:text-[0.625em]">With</span>
               </span>{" "}
               <span className="whitespace-nowrap">DSC Labs</span>
             </h2>
-            <p className="max-w-md text-base leading-relaxed text-dsc-b90">
+            <p className="max-w-md text-sm leading-relaxed text-dsc-b90 md:text-base">
               We collaborate with robotics startups, AI teams, universities,
               research groups, hardware companies, automation partners, and
               education organizations to test and develop practical robotics
@@ -65,16 +65,16 @@ export function Partner() {
 
           <Stagger className="grid w-full max-w-[393px] grid-cols-2 gap-x-[21px] gap-y-[15px] lg:shrink-0">
             {PARTNERS.map((partner) => (
-              <StaggerItem key={partner.title}>
+              <StaggerItem key={partner.title} fromRight>
                 <div
                   style={CUT_CORNER}
-                  className="flex aspect-square flex-col justify-center gap-4 bg-[#141B2F] px-6 transition-colors duration-300 hover:bg-[#1a2440]"
+                  className="flex aspect-square flex-col justify-start gap-3 bg-[#141B2F] p-6 transition-colors duration-300 hover:bg-[#1a2440]"
                 >
                   <p className="text-base font-semibold text-white">
                     {partner.title}
                   </p>
                   <div className="h-px w-full bg-white/15" />
-                  <p className="text-base leading-snug text-dsc-b90">
+                  <p className="text-sm leading-snug text-dsc-b90 sm:text-base">
                     {partner.desc}
                   </p>
                 </div>

@@ -1,16 +1,51 @@
+"use client";
+
+import { useRef } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/motion";
 
 const CARDS = [
-  { title: "Workshop", poster: "/images/inside/workshop.png?v=2" },
+  { title: "Workshop", poster: "/images/inside/workshop.png?v=3" },
   {
     title: "Robotic Experiments",
-    poster: "/images/inside/robotic-experiments.png?v=2",
+    poster: "/images/inside/robotic-experiments.png?v=3",
   },
-  { title: "Data Collection", poster: "/images/inside/data-collection.png?v=2" },
+  { title: "Data Collection", poster: "/images/inside/data-collection.png?v=3" },
+  {
+    title: "Simulation Testing",
+    poster: "/images/inside/simulation-testing.png?v=3",
+  },
+  {
+    title: "Partner Demonstrations",
+    poster: "/images/inside/partner-demonstrations.png?v=3",
+  },
 ];
 
+function Card({ poster, title }: { poster: string; title: string }) {
+  return (
+    <div className="group flex h-full flex-col bg-dsc-brand pb-6">
+      <div className="relative aspect-square w-full overflow-hidden">
+        <Image
+          src={poster}
+          alt={title}
+          fill
+          draggable={false}
+          sizes="(max-width: 1024px) 100vw, 340px"
+          className="pointer-events-none object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      </div>
+      <div className="flex flex-col items-center gap-1 px-4 pt-6 text-center text-white">
+        <p className="text-base font-semibold uppercase">{title}</p>
+        <p className="text-base font-light">Simulation experiments</p>
+      </div>
+    </div>
+  );
+}
+
 export function InsideLabs() {
+  const viewportRef = useRef<HTMLDivElement>(null);
+
   return (
     <section
       id="inside"
@@ -25,54 +60,60 @@ export function InsideLabs() {
         sizes="100vw"
         className="object-cover object-top opacity-50"
       />
-      {/* Deep navy wash (no blue tint) so the backdrop reads dark, not purple. */}
       <div className="absolute inset-0 bg-gradient-to-b from-dsc-b900/60 via-dsc-b900/90 to-dsc-b900" />
 
       <div className="container relative">
         <Reveal className="flex max-w-xl flex-col gap-4">
           <div className="font-expanded leading-[1.1] text-white">
-            <p className="text-[clamp(1.5rem,2.8vw,2.5rem)] font-semibold">
+            <p className="text-[2rem] font-semibold md:text-[clamp(1.5rem,2.8vw,2.5rem)]">
               Inside
             </p>
             <p>
-              <span className="text-[clamp(2.5rem,5vw,4rem)] font-light">
+              <span className="text-[2rem] font-light md:text-[clamp(2.5rem,5vw,4rem)]">
                 DSC
               </span>
-              <span className="text-[clamp(1.5rem,2.8vw,2.5rem)] font-light">
+              <span className="text-[2rem] font-light md:text-[clamp(1.5rem,2.8vw,2.5rem)]">
                 {" "}
                 Labs
               </span>
             </p>
           </div>
-          <p className="max-w-md text-base leading-relaxed text-white/70">
+          <p className="max-w-md text-sm leading-relaxed text-white/70 md:text-base">
             A hands-on environment for robotic experiments, simulation testing,
             data collection, workshops, and partner demonstrations.
           </p>
         </Reveal>
 
-        <Stagger className="mt-14 grid gap-8 md:grid-cols-3">
+        {/* Mobile / tablet: a plain vertical stack of all five cards. */}
+        <Stagger className="mt-12 flex flex-col gap-8 lg:hidden">
           {CARDS.map((card) => (
             <StaggerItem key={card.title}>
-              <div className="group flex flex-col items-center gap-6 bg-dsc-brand pb-6">
-                <div className="relative aspect-square w-full overflow-hidden">
-                  <Image
-                    src={card.poster}
-                    alt={card.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 400px"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-                <div className="flex flex-col items-center gap-1 text-center text-white">
-                  <p className="text-base font-semibold uppercase">
-                    {card.title}
-                  </p>
-                  <p className="text-base font-light">Simulation experiments</p>
-                </div>
-              </div>
+              <Card {...card} />
             </StaggerItem>
           ))}
         </Stagger>
+
+        {/* Desktop: drag horizontally like a slide. The track is wider than the
+            viewport; framer constrains the drag to the viewport bounds. */}
+        <Reveal className="mt-14 hidden lg:block">
+          <div ref={viewportRef} className="overflow-hidden">
+            <motion.div
+              drag="x"
+              dragConstraints={viewportRef}
+              dragElastic={0.08}
+              className="flex w-max cursor-grab gap-6 active:cursor-grabbing"
+            >
+              {CARDS.map((card) => (
+                <div
+                  key={card.title}
+                  className="w-[clamp(280px,26vw,340px)] shrink-0 select-none"
+                >
+                  <Card {...card} />
+                </div>
+              ))}
+            </motion.div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

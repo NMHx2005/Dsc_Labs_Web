@@ -20,33 +20,34 @@ export function Hero() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-[center_35%] md:object-bottom"
+          className="origin-bottom scale-[1.3] object-cover object-[60%_100%] md:scale-100 md:object-bottom"
         />
-        {/* Scrims keep the lower-left headline legible over the imagery. */}
-        {/* <div className="absolute inset-0 scrim-y" /> */}
-        <div className="absolute inset-0 bg-gradient-to-r from-dsc-dark/85 via-dsc-dark/30 to-transparent" />
-
-        <div className="container relative pb-20 pt-32 md:pb-28">
+        <div className="container relative pb-[38px] pt-32 md:pb-28">
           <div className="flex max-w-3xl flex-col items-start gap-6">
             <Reveal>
-              <Eyebrow pulse>OPERATIONAL STATUS: ACTIVE</Eyebrow>
+              <Eyebrow
+                pulse
+                className="text-sm font-normal tracking-normal text-white md:text-xs md:font-medium md:tracking-[0.22em] md:text-dsc-b90"
+              >
+                OPERATIONAL STATUS: ACTIVE
+              </Eyebrow>
             </Reveal>
             <Reveal delay={0.05}>
-              <h1 className="font-expanded text-[clamp(2.25rem,5vw,3.75rem)] font-medium leading-[1.05] text-white">
+              <h1 className="font-expanded text-[clamp(2rem,5vw,3.75rem)] font-medium leading-[1.05] text-white">
                 <span className="font-light">Building the Bridge</span> Between
                 Simulation and{" "}
                 <span className="font-light">Real-World Robotics</span>
               </h1>
             </Reveal>
             <Reveal delay={0.1}>
-              <p className="max-w-xl text-base leading-relaxed text-dsc-b90">
+              <p className="max-w-xl text-sm leading-relaxed text-dsc-b90 md:text-base">
                 DSC Labs develops simulation workflows, robotic data pipelines,
                 and testing environments that help robots move from virtual
                 experiments to real-world performance.
               </p>
             </Reveal>
             <Reveal delay={0.15}>
-              <Button href="#work">Explore Our Work</Button>
+              <Button href="#inside">Explore Our Work</Button>
             </Reveal>
           </div>
         </div>

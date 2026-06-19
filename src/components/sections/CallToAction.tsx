@@ -5,7 +5,7 @@ export function CallToAction() {
   return (
     <section
       id="contact"
-      className="relative flex min-h-[560px] w-full items-center justify-center overflow-hidden"
+      className="relative flex py-[80px] w-full items-center justify-center overflow-hidden"
     >
       <ParallaxImage
         src="/images/cta/cta-bg.png"
@@ -18,12 +18,17 @@ export function CallToAction() {
 
       <div className="container relative">
         <Reveal className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
-          <h2 className="font-expanded text-[clamp(1.75rem,3.6vw,2.75rem)] font-semibold leading-[1.15] text-dsc-b800">
+          <h2 className="font-expanded text-[2.5rem] font-semibold leading-[1.1] text-dsc-b800 md:text-[clamp(1.75rem,3.6vw,2.75rem)] md:leading-[1.15]">
             Build, Test, and Validate the Future of{" "}
-            <span className="text-[1.25em] font-light">Robotics</span> With{" "}
-            <span className="text-[1.25em] font-light">DSC Labs</span>
+            <span className="text-[1.6em] font-light md:text-[1.25em]">
+              Robotics
+            </span>{" "}
+            With{" "}
+            <span className="text-[1.6em] font-light md:text-[1.25em]">
+              DSC Labs
+            </span>
           </h2>
-          <p className="max-w-xl text-base leading-relaxed text-dsc-b200">
+          <p className="max-w-xl text-sm leading-relaxed text-dsc-b200 md:text-base">
             Whether you are developing robotic systems, testing AI models, or
             exploring simulation workflows, DSC Labs is ready to collaborate.
           </p>

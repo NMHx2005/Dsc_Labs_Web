@@ -11,24 +11,64 @@ import {
   type HTMLMotionProps,
 } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { staggerContainer, staggerItem } from "@/components/animations/stagger";
+import {
+  staggerContainer,
+  staggerItem,
+  staggerItemRight,
+} from "@/components/animations/stagger";
 
 const EASE = [0.25, 0.1, 0.25, 1] as const;
+// Wix "Thunderbolt" reveal easing (cubic-bezier 0.22, 1, 0.36, 1) — a firm
+// ease-out settle that gives reveals their glide-into-place character.
+const EASE_OUT = [0.22, 1, 0.36, 1] as const;
 const VIEWPORT = { once: true, margin: "-80px" } as const;
 
 type RevealProps = HTMLMotionProps<"div"> & {
   delay?: number;
+  /** Vertical offset (px). Default 0 — text sharpens in place, it doesn't rise. */
   y?: number;
+  /** Horizontal offset (px). */
+  x?: number;
+  /** Start blur in px that sharpens to 0 ("blurIn"). 0 disables it. */
+  blur?: number;
+  duration?: number;
 };
 
-/** Single element that fades + rises into view once on scroll. */
-export function Reveal({ delay = 0, y = 24, children, ...props }: RevealProps) {
+/**
+ * Text reveal: fades in while sharpening from a blur ("blurIn") — the brief's
+ * text motion (mờ → rõ dần), in place rather than sliding up. Blur is on by
+ * default; pass blur={0} to opt a block out.
+ */
+export function Reveal({
+  delay = 0,
+  y = 0,
+  x = 0,
+  blur = 10,
+  duration = 1,
+  children,
+  ...props
+}: RevealProps) {
+  const reduce = useReducedMotion();
+  // MotionConfig handles transform/opacity under reduced motion; filter is not
+  // a "motion" property, so drop the blur ourselves to avoid a needless paint.
+  const blurFilter = blur > 0 && !reduce;
+
   return (
     <motion.div
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{
+        opacity: 0,
+        y,
+        x,
+        ...(blurFilter ? { filter: `blur(${blur}px)` } : {}),
+      }}
+      whileInView={{
+        opacity: 1,
+        y: 0,
+        x: 0,
+        ...(blurFilter ? { filter: "blur(0px)" } : {}),
+      }}
       viewport={VIEWPORT}
-      transition={{ duration: 0.6, ease: EASE, delay }}
+      transition={{ duration, ease: EASE_OUT, delay }}
       {...props}
     >
       {children}
@@ -51,9 +91,14 @@ export function Stagger({ children, ...props }: HTMLMotionProps<"div">) {
   );
 }
 
-export function StaggerItem({ children, ...props }: HTMLMotionProps<"div">) {
+type StaggerItemProps = HTMLMotionProps<"div"> & {
+  /** Glide in from the right instead of rising — for info cards (Wix glideIn). */
+  fromRight?: boolean;
+};
+
+export function StaggerItem({ fromRight, children, ...props }: StaggerItemProps) {
   return (
-    <motion.div variants={staggerItem} {...props}>
+    <motion.div variants={fromRight ? staggerItemRight : staggerItem} {...props}>
       {children}
     </motion.div>
   );
