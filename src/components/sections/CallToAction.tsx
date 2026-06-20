@@ -18,13 +18,13 @@ export function CallToAction() {
 
       <div className="container relative">
         <Reveal className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
-          <h2 className="font-expanded text-[2.5rem] font-semibold leading-[1.1] text-dsc-b800 md:text-[clamp(1.75rem,3.6vw,2.75rem)] md:leading-[1.15]">
+          <h2 className="font-expanded text-[32px] font-semibold leading-[1.1] text-dsc-b800 md:text-[clamp(1.75rem,3.6vw,2.75rem)] md:leading-[1.15]">
             Build, Test, and Validate the Future of{" "}
-            <span className="text-[1.6em] font-light md:text-[1.25em]">
+            <span className="text-[32px] font-light md:text-[1.25em]">
               Robotics
             </span>{" "}
             With{" "}
-            <span className="text-[1.6em] font-light md:text-[1.25em]">
+            <span className="text-[32px] font-light md:text-[1.25em]">
               DSC Labs
             </span>
           </h2>
