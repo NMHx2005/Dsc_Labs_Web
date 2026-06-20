@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/motion";
 
 const CARDS = [
@@ -87,33 +86,35 @@ export function InsideLabs() {
         {/* Mobile / tablet: a plain vertical stack of all five cards. */}
         <Stagger className="mt-12 flex flex-col gap-8 lg:hidden">
           {CARDS.map((card) => (
-            <StaggerItem key={card.title}>
+            <StaggerItem key={card.title} fromRight>
               <Card {...card} />
             </StaggerItem>
           ))}
         </Stagger>
 
-        {/* Desktop: drag horizontally like a slide. The track is wider than the
-            viewport; framer constrains the drag to the viewport bounds. */}
-        <Reveal className="mt-14 hidden lg:block">
-          <div ref={viewportRef} className="overflow-hidden">
-            <motion.div
-              drag="x"
-              dragConstraints={viewportRef}
-              dragElastic={0.08}
-              className="flex w-max cursor-grab gap-6 active:cursor-grabbing"
-            >
-              {CARDS.map((card) => (
-                <div
-                  key={card.title}
-                  className="w-[clamp(280px,26vw,340px)] shrink-0 select-none"
-                >
-                  <Card {...card} />
-                </div>
-              ))}
-            </motion.div>
-          </div>
-        </Reveal>
+        {/* Desktop: cards fly in one-by-one from the right (like the Partner
+            cards), then the track is draggable. The Stagger container doubles as
+            the drag track — its variants only orchestrate timing, so they don't
+            touch the drag transform. The track is wider than the viewport;
+            framer constrains the drag to the viewport bounds. */}
+        <div ref={viewportRef} className="mt-14 hidden overflow-hidden lg:block">
+          <Stagger
+            drag="x"
+            dragConstraints={viewportRef}
+            dragElastic={0.08}
+            className="flex w-max cursor-grab gap-6 active:cursor-grabbing"
+          >
+            {CARDS.map((card) => (
+              <StaggerItem
+                key={card.title}
+                fromRight
+                className="w-[clamp(280px,26vw,340px)] shrink-0 select-none"
+              >
+                <Card {...card} />
+              </StaggerItem>
+            ))}
+          </Stagger>
+        </div>
       </div>
     </section>
   );
