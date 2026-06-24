@@ -112,14 +112,13 @@ export function InsideLabs() {
             cards), then moving the mouse across the track auto-scrolls it — no
             dragging. The Stagger container doubles as the scroll track; its
             variants only orchestrate entry timing, leaving the x transform free
-            for the pointer-driven scroll.
-            Bleed the track to the right edge of the viewport (not just the
-            container): the negative right margin cancels the container's right
-            padding plus its centering gutter at every width. */}
+            for the pointer-driven scroll. The track stays within the container
+            width, so scrolling fully right leaves a gutter symmetric with the
+            left edge. */}
         <div
           ref={viewportRef}
           onMouseMove={handleScrollByPointer}
-          className="mt-14 hidden overflow-hidden lg:mr-[calc(50%-50vw)] lg:block"
+          className="mt-14 hidden overflow-hidden lg:block"
         >
           <Stagger
             style={{ x: reduce ? x : scrollX }}
