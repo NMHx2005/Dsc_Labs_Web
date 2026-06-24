@@ -49,7 +49,7 @@ export function InsideLabs() {
   // Mouse position drives the horizontal scroll: pointer at the left edge shows
   // the first card, at the right edge the last. A spring smooths the travel.
   const x = useMotionValue(0);
-  const scrollX = useSpring(x, { stiffness: 55, damping: 22, mass: 0.6 });
+  const scrollX = useSpring(x, { stiffness: 90, damping: 24, mass: 0.5 });
 
   const handleScrollByPointer = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = viewportRef.current;
