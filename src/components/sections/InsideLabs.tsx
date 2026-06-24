@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
+import { useMotionValue, useReducedMotion, useSpring } from "framer-motion";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/motion";
 
 const CARDS = [
@@ -44,6 +45,21 @@ function Card({ poster, title }: { poster: string; title: string }) {
 
 export function InsideLabs() {
   const viewportRef = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+  // Mouse position drives the horizontal scroll: pointer at the left edge shows
+  // the first card, at the right edge the last. A spring smooths the travel.
+  const x = useMotionValue(0);
+  const scrollX = useSpring(x, { stiffness: 120, damping: 26, mass: 0.4 });
+
+  const handleScrollByPointer = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = viewportRef.current;
+    if (!el) return;
+    const overflow = el.scrollWidth - el.clientWidth;
+    if (overflow <= 0) return;
+    const rect = el.getBoundingClientRect();
+    const ratio = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+    x.set(-ratio * overflow);
+  };
 
   return (
     <section
@@ -93,16 +109,21 @@ export function InsideLabs() {
         </Stagger>
 
         {/* Desktop: cards fly in one-by-one from the right (like the Partner
-            cards), then the track is draggable. The Stagger container doubles as
-            the drag track — its variants only orchestrate timing, so they don't
-            touch the drag transform. The track is wider than the viewport;
-            framer constrains the drag to the viewport bounds. */}
-        <div ref={viewportRef} className="mt-14 hidden overflow-hidden lg:block">
+            cards), then moving the mouse across the track auto-scrolls it — no
+            dragging. The Stagger container doubles as the scroll track; its
+            variants only orchestrate entry timing, leaving the x transform free
+            for the pointer-driven scroll.
+            Bleed the track to the right edge of the viewport (not just the
+            container): the negative right margin cancels the container's right
+            padding plus its centering gutter at every width. */}
+        <div
+          ref={viewportRef}
+          onMouseMove={handleScrollByPointer}
+          className="mt-14 hidden overflow-hidden lg:mr-[calc(50%-50vw)] lg:block"
+        >
           <Stagger
-            drag="x"
-            dragConstraints={viewportRef}
-            dragElastic={0.08}
-            className="flex w-max cursor-grab gap-6 active:cursor-grabbing"
+            style={{ x: reduce ? x : scrollX }}
+            className="flex w-max gap-6"
           >
             {CARDS.map((card) => (
               <StaggerItem
