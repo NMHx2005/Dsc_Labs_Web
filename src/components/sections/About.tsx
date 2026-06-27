@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { Reveal, Stagger, StaggerItem } from "@/components/ui/motion";
+import { Reveal, SplitText, Stagger, StaggerItem } from "@/components/ui/motion";
 import { MarkerFive } from "@/components/ui/MarkerFive";
 import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
 
@@ -26,16 +26,20 @@ export function About() {
 
         <div className="container relative py-24 md:py-32">
           <div className="flex max-w-xl flex-col gap-8">
-            <Reveal>
-              <h2 className="font-expanded text-[clamp(1.875rem,3.4vw,2.75rem)] font-light leading-[1.15] text-white">
-                A <span className="text-[1.45em] font-medium">Robotics</span>{" "}
-                Lab for{" "}
-                <span className="font-extralight text-dsc-b90">
-                  Simulation, Data, and Real-World
-                </span>{" "}
-                Intelligence
-              </h2>
-            </Reveal>
+            <h2 className="font-expanded text-[clamp(1.875rem,3.4vw,2.75rem)] font-light leading-[1.15] text-white">
+              <SplitText
+                segments={[
+                  { text: "A " },
+                  { text: "Robotics", className: "text-[1.45em] font-medium" },
+                  { text: " Lab for " },
+                  {
+                    text: "Simulation, Data, and Real-World",
+                    className: "font-extralight text-dsc-b90",
+                  },
+                  { text: " Intelligence" },
+                ]}
+              />
+            </h2>
 
             <div className="flex flex-col gap-[21px]">
               <Reveal delay={0.05}>

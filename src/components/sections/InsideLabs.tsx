@@ -25,6 +25,8 @@ const CARDS = [
 function Card({ poster, title }: { poster: string; title: string }) {
   return (
     <div className="group flex h-full flex-col bg-dsc-brand pb-6">
+      {/* Posters are square (370×370) and the frame is square, so the image
+          sits 1:1 — fully visible, no crop. Hover nudges a 5% zoom. */}
       <div className="relative aspect-square w-full overflow-hidden">
         <Image
           src={poster}
@@ -99,10 +101,11 @@ export function InsideLabs() {
           </p>
         </Reveal>
 
-        {/* Mobile / tablet: a plain vertical stack of all five cards. */}
+        {/* Mobile / tablet: a plain vertical stack of all five cards, each
+            rising into view (y:50) one after another. */}
         <Stagger className="mt-12 flex flex-col gap-8 lg:hidden">
           {CARDS.map((card) => (
-            <StaggerItem key={card.title} fromRight>
+            <StaggerItem key={card.title} rise>
               <Card {...card} />
             </StaggerItem>
           ))}

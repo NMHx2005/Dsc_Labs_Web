@@ -30,6 +30,22 @@ export const staggerItem: Variants = {
   },
 };
 
+/** Image-card item: rises from below as it scrolls into view (vertical stacks). */
+export const staggerItemUp: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 50,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: EASE_OUT,
+    },
+  },
+};
+
 /**
  * Info-card item: shoots in fast from the far right edge (off-screen), one
  * after another. x is element-relative so each card starts well off to the

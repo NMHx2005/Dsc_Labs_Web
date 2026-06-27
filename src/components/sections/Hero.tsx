@@ -24,7 +24,9 @@ export function Hero() {
         />
         <div className="container relative pb-[38px] pt-32 md:pb-28">
           <div className="flex max-w-3xl flex-col items-start gap-6">
-            <Reveal>
+            {/* On-load intro: each block rises 30px and fades+sharpens in,
+                staggered 0.2s so the order reads top-to-bottom. */}
+            <Reveal y={30}>
               <Eyebrow
                 pulse
                 className="text-sm font-normal tracking-normal text-white md:text-xs md:font-medium md:tracking-[0.22em] md:text-dsc-b90"
@@ -32,21 +34,21 @@ export function Hero() {
                 OPERATIONAL STATUS: ACTIVE
               </Eyebrow>
             </Reveal>
-            <Reveal delay={0.05}>
+            <Reveal y={30} delay={0.2}>
               <h1 className="font-expanded text-[clamp(2rem,5vw,3.75rem)] font-medium leading-[1.05] text-white">
                 <span className="font-light">Building the Bridge</span> Between
                 Simulation and{" "}
                 <span className="font-light">Real-World Robotics</span>
               </h1>
             </Reveal>
-            <Reveal delay={0.1}>
+            <Reveal y={30} delay={0.4}>
               <p className="max-w-xl text-sm leading-relaxed text-dsc-b90 md:text-base">
                 DSC Labs develops simulation workflows, robotic data pipelines,
                 and testing environments that help robots move from virtual
                 experiments to real-world performance.
               </p>
             </Reveal>
-            <Reveal delay={0.15}>
+            <Reveal y={30} delay={0.6}>
               <Button href="#inside">Explore Our Work</Button>
             </Reveal>
           </div>

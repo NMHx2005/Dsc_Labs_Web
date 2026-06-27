@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/motion";
+import { useVanillaTilt } from "@/hooks/useVanillaTilt";
 
 const PARTNERS = [
   {
@@ -24,6 +27,32 @@ const PARTNERS = [
 const CUT_CORNER = {
   clipPath: "polygon(0 0, 100% 0, 100% 100%, 26px 100%, 0 calc(100% - 30px))",
 };
+
+// Each panel tilts in 3D toward the cursor (capped at 10° to avoid distortion)
+// and eases back on mouse-leave (GSAP power2.out) — via the project's shared
+// vanilla-tilt hook. The tilt lives on a wrapper so the panel's own clip-path
+// and colour transition are untouched.
+function PartnerCard({ title, desc }: { title: string; desc: string }) {
+  const tiltRef = useVanillaTilt<HTMLDivElement>({
+    max: 10,
+    easing: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+  });
+
+  return (
+    <StaggerItem fromRight>
+      <div ref={tiltRef}>
+        <div
+          style={CUT_CORNER}
+          className="flex aspect-square flex-col justify-start gap-3 bg-[#141B2F] p-6 transition-colors duration-300 hover:bg-[#1a2440]"
+        >
+          <p className="text-base font-semibold text-white">{title}</p>
+          <div className="h-px w-full bg-white/15" />
+          <p className="text-sm leading-snug text-dsc-b90 sm:text-base">{desc}</p>
+        </div>
+      </div>
+    </StaggerItem>
+  );
+}
 
 export function Partner() {
   return (
@@ -65,20 +94,11 @@ export function Partner() {
 
           <Stagger className="grid w-full max-w-[393px] grid-cols-2 gap-x-[21px] gap-y-[15px] lg:shrink-0">
             {PARTNERS.map((partner) => (
-              <StaggerItem key={partner.title} fromRight>
-                <div
-                  style={CUT_CORNER}
-                  className="flex aspect-square flex-col justify-start gap-3 bg-[#141B2F] p-6 transition-colors duration-300 hover:bg-[#1a2440]"
-                >
-                  <p className="text-base font-semibold text-white">
-                    {partner.title}
-                  </p>
-                  <div className="h-px w-full bg-white/15" />
-                  <p className="text-sm leading-snug text-dsc-b90 sm:text-base">
-                    {partner.desc}
-                  </p>
-                </div>
-              </StaggerItem>
+              <PartnerCard
+                key={partner.title}
+                title={partner.title}
+                desc={partner.desc}
+              />
             ))}
           </Stagger>
         </div>

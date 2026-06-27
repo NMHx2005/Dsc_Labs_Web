@@ -9,12 +9,14 @@ import {
   useTransform,
   useReducedMotion,
   type HTMLMotionProps,
+  type Variants,
 } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
   staggerContainer,
   staggerItem,
   staggerItemRight,
+  staggerItemUp,
 } from "@/components/animations/stagger";
 
 const EASE = [0.25, 0.1, 0.25, 1] as const;
@@ -76,6 +78,119 @@ export function Reveal({
   );
 }
 
+// GSAP `back.out(s)` ease-out form, replicated exactly so the per-character
+// overshoot matches the brief's `back.out(1.7)` frame-for-frame (s = 1.7).
+const BACK_OUT_17 = (p: number) => {
+  const s = 1.7;
+  p -= 1;
+  return p * p * ((s + 1) * p + s) + 1;
+};
+
+// Each character flips up from below (rotateX) and fades in. The variant is a
+// resolver so every char reads its own global index → delay = index * stagger.
+const splitCharVariants: Variants = {
+  hidden: { opacity: 0, y: 20, rotateX: -90 },
+  visible: (delay: number) => ({
+    opacity: 1,
+    y: 0,
+    rotateX: 0,
+    transition: { duration: 0.5, ease: BACK_OUT_17, delay },
+  }),
+};
+
+/** A run of text in the heading that shares one style (e.g. an emphasized word). */
+type Segment = { text: string; className?: string };
+
+type SplitTextProps = {
+  /** Heading text as styled runs; concatenated for the accessible label. */
+  segments: Segment[];
+  className?: string;
+  /** Per-character delay step (GSAP `stagger`). */
+  stagger?: number;
+};
+
+/**
+ * Character-by-character heading reveal: each letter flips up with a `back.out`
+ * overshoot, staggered in reading order — the brief's SplitText motion, built on
+ * Framer Motion. Words stay unbreakable (inline-block) while spaces remain normal
+ * text so the line still wraps. Screen readers get the full string via aria-label;
+ * the split letters are aria-hidden. Reduced motion renders the styled text as-is.
+ */
+export function SplitText({ segments, className, stagger = 0.02 }: SplitTextProps) {
+  const reduce = useReducedMotion();
+  const label = segments.map((s) => s.text).join("");
+
+  if (reduce) {
+    return (
+      <span className={className}>
+        {segments.map((s, i) => (
+          <span key={i} className={s.className}>
+            {s.text}
+          </span>
+        ))}
+      </span>
+    );
+  }
+
+  // Flatten to per-character (carrying each run's style), then regroup into
+  // word/space tokens so words never break mid-letter but lines still wrap.
+  type Char = { ch: string; className?: string };
+  type Token = { type: "word"; chars: Char[] } | { type: "space" };
+  const tokens: Token[] = [];
+  let word: Char[] = [];
+  for (const seg of segments) {
+    for (const ch of seg.text) {
+      if (ch === " ") {
+        if (word.length) tokens.push({ type: "word", chars: word });
+        word = [];
+        tokens.push({ type: "space" });
+      } else {
+        word.push({ ch, className: seg.className });
+      }
+    }
+  }
+  if (word.length) tokens.push({ type: "word", chars: word });
+
+  let index = 0;
+  return (
+    <motion.span
+      aria-label={label}
+      className={className}
+      initial="hidden"
+      whileInView="visible"
+      viewport={VIEWPORT}
+      style={{ display: "inline-block" }}
+    >
+      {tokens.map((token, ti) =>
+        token.type === "space" ? (
+          <span key={ti}> </span>
+        ) : (
+          <span
+            key={ti}
+            aria-hidden
+            style={{ display: "inline-block", whiteSpace: "nowrap" }}
+          >
+            {token.chars.map((c, ci) => {
+              const delay = index++ * stagger;
+              return (
+                <motion.span
+                  key={ci}
+                  custom={delay}
+                  variants={splitCharVariants}
+                  className={c.className}
+                  style={{ display: "inline-block", transformPerspective: 600 }}
+                >
+                  {c.ch}
+                </motion.span>
+              );
+            })}
+          </span>
+        )
+      )}
+    </motion.span>
+  );
+}
+
 /** Container that staggers its <StaggerItem> children into view. */
 export function Stagger({ children, ...props }: HTMLMotionProps<"div">) {
   return (
@@ -94,11 +209,23 @@ export function Stagger({ children, ...props }: HTMLMotionProps<"div">) {
 type StaggerItemProps = HTMLMotionProps<"div"> & {
   /** Glide in from the right instead of rising — for info cards (Wix glideIn). */
   fromRight?: boolean;
+  /** Rise in from below with a longer travel (opacity + y:50) — image cards. */
+  rise?: boolean;
 };
 
-export function StaggerItem({ fromRight, children, ...props }: StaggerItemProps) {
+export function StaggerItem({
+  fromRight,
+  rise,
+  children,
+  ...props
+}: StaggerItemProps) {
+  const variant = fromRight
+    ? staggerItemRight
+    : rise
+      ? staggerItemUp
+      : staggerItem;
   return (
-    <motion.div variants={fromRight ? staggerItemRight : staggerItem} {...props}>
+    <motion.div variants={variant} {...props}>
       {children}
     </motion.div>
   );
