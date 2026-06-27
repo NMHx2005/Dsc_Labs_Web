@@ -107,6 +107,8 @@ type SplitTextProps = {
   className?: string;
   /** Per-character delay step (GSAP `stagger`). */
   stagger?: number;
+  /** Delay before the first character flips in (lets it follow other intro blocks). */
+  delay?: number;
 };
 
 /**
@@ -116,7 +118,12 @@ type SplitTextProps = {
  * text so the line still wraps. Screen readers get the full string via aria-label;
  * the split letters are aria-hidden. Reduced motion renders the styled text as-is.
  */
-export function SplitText({ segments, className, stagger = 0.02 }: SplitTextProps) {
+export function SplitText({
+  segments,
+  className,
+  stagger = 0.02,
+  delay = 0,
+}: SplitTextProps) {
   const reduce = useReducedMotion();
   const label = segments.map((s) => s.text).join("");
 
@@ -171,11 +178,11 @@ export function SplitText({ segments, className, stagger = 0.02 }: SplitTextProp
             style={{ display: "inline-block", whiteSpace: "nowrap" }}
           >
             {token.chars.map((c, ci) => {
-              const delay = index++ * stagger;
+              const charDelay = delay + index++ * stagger;
               return (
                 <motion.span
                   key={ci}
-                  custom={delay}
+                  custom={charDelay}
                   variants={splitCharVariants}
                   className={c.className}
                   style={{ display: "inline-block", transformPerspective: 600 }}

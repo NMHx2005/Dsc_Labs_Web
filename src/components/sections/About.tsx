@@ -4,11 +4,11 @@ import { MarkerFive } from "@/components/ui/MarkerFive";
 import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
 
 const CAPABILITIES = [
-  "Robotic simulation",
-  "Data-centric robotics",
-  "Industry collaboration",
-  "Sim-to-real transfer",
-  "Applied AI testing",
+  { label: "Robotic simulation", detail: "High-fidelity physics for safe, fast iteration." },
+  { label: "Data-centric robotics", detail: "Synthetic and real datasets generated at scale." },
+  { label: "Industry collaboration", detail: "Co-developing with hardware and automation partners." },
+  { label: "Sim-to-real transfer", detail: "Policies that survive the reality gap." },
+  { label: "Applied AI testing", detail: "Benchmarking models on real robotic tasks." },
 ];
 
 export function About() {
@@ -51,15 +51,22 @@ export function About() {
                 </p>
               </Reveal>
 
-              {/* Indented capability list — matches Figma 6:801 (w-182, px-64). */}
-              <Stagger className="flex w-[182px] flex-col items-start gap-2 px-6 lg:px-16">
-                {CAPABILITIES.map((label, i) => (
+              {/* Capability list — hover a row to reveal its one-line detail. */}
+              <Stagger className="flex w-full max-w-[280px] flex-col items-start gap-2 px-6 lg:px-16">
+                {CAPABILITIES.map(({ label, detail }, i) => (
                   <Fragment key={label}>
-                    <StaggerItem className="flex items-center gap-1">
-                      <MarkerFive className="size-4 text-white" />
-                      <span className="whitespace-nowrap text-base text-white">
-                        {label}
-                      </span>
+                    <StaggerItem className="group w-full cursor-default">
+                      <div className="flex items-center gap-1.5 transition-transform duration-300 group-hover:translate-x-1">
+                        <MarkerFive className="size-4 text-white transition-colors duration-300 group-hover:text-dsc-brand" />
+                        <span className="whitespace-nowrap text-base text-white">
+                          {label}
+                        </span>
+                      </div>
+                      <div className="grid grid-rows-[0fr] opacity-0 transition-all duration-300 group-hover:grid-rows-[1fr] group-hover:opacity-100">
+                        <span className="overflow-hidden pl-[22px] pt-1 text-sm leading-snug text-dsc-b90">
+                          {detail}
+                        </span>
+                      </div>
                     </StaggerItem>
                     {i < CAPABILITIES.length - 1 && (
                       <div className="h-px w-full bg-white/20" />
