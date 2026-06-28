@@ -64,6 +64,24 @@
       rgba(27, 30, 37, 0.96) 100%
     );
   }
+
+  /* GSAP SplitText masked reveal: words clip the chars that rise into place. */
+  .split-word {
+    display: inline-block;
+    overflow: hidden;
+    padding-bottom: 0.12em;
+  }
+  .split-char {
+    display: inline-block;
+    will-change: transform;
+  }
+}
+
+/* While the GSAP custom cursor is mounted (desktop, motion enabled) the native
+   cursor is hidden in favour of the dot + ring. */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

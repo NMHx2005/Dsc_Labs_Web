@@ -5,6 +5,7 @@ import "./globals.css";
 import { SITE_NAME, SITE_DESCRIPTION } from "@/lib/constants";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { ScrollProgress } from "@/components/ui/motion";
+import { CustomCursor } from "@/components/ui/gsap-effects";
 
 // SF Pro — self-hosted variable font (subset to latin, woff2). Exposes the
 // weight (1–1000) and width (30–150) axes; .font-expanded uses width 132 for
@@ -60,6 +61,7 @@ export default function RootLayout({
     >
       <body className="min-h-screen antialiased">
         <ScrollProgress />
+        <CustomCursor />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>

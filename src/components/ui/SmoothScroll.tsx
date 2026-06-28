@@ -3,7 +3,16 @@
 import { useEffect, type ReactNode } from "react";
 import { MotionConfig } from "framer-motion";
 import Lenis from "lenis";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 
+/**
+ * Lenis smooth scroll wired into GSAP: Lenis is driven by the gsap ticker and
+ * reports every scroll to ScrollTrigger, so all GSAP ScrollTriggers stay in
+ * sync with the smoothed scroll position (the standard Lenis + GSAP setup).
+ * Only runs on desktop fine-pointer + non-reduced-motion; otherwise ScrollTrigger
+ * falls back to native scroll. The MotionConfig keeps the remaining framer-motion
+ * animations (InsideLabs) honoring the OS reduced-motion setting.
+ */
 export function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -20,15 +29,14 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       touchMultiplier: 0,
     });
 
-    let rafId = 0;
-    const raf = (time: number) => {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    };
-    rafId = requestAnimationFrame(raf);
+    lenis.on("scroll", ScrollTrigger.update);
+
+    const tick = (time: number) => lenis.raf(time * 1000);
+    gsap.ticker.add(tick);
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
-      cancelAnimationFrame(rafId);
+      gsap.ticker.remove(tick);
       lenis.destroy();
     };
   }, []);
