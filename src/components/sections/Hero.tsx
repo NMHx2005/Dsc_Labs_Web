@@ -102,6 +102,10 @@ export function Hero() {
           aria-hidden
           className="absolute inset-0 bg-gradient-to-t from-dsc-dark via-dsc-dark/20 to-transparent"
         />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-t from-dsc-dark via-dsc-dark/20 to-transparent"
+        />
       </div>
 
       {/* Centered brand logo with a cursor-following chrome sweep. */}
