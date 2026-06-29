@@ -39,7 +39,7 @@ export function CallToAction() {
             </p>
           </Reveal>
           <Magnetic>
-            <Button href="#about" variant="dark">
+            <Button href="mailto:steve@dsc-labs.io" variant="dark">
               Explore Our Work
             </Button>
           </Magnetic>
